@@ -17,7 +17,6 @@ shared_scripts {
     'shared/classes/showroom.lua',
     'shared/classes/dealership.lua',
     'shared/classes/configStore.lua',
-    'shared/sh_*.lua'
 }
 
 server_scripts {
