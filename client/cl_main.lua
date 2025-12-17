@@ -1,4 +1,4 @@
-local config <const> = CConfigStore:new()
+local config <const> = CDealershipConfig:new()
 
 RegisterNetEvent('mimesis:dealerships:recieveShowroomState', function(dealershipName, vehicleDisplaySlots)
     local dealerships = config:getDealerships()

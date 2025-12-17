@@ -6,24 +6,6 @@ local DEFAULT_CONFIG <const> = {
   }
 }
 
----@class CConfigStore
----@diagnostic disable-next-line: duplicate-doc-field
----@field private private { m_vehicles: table, m_dealerships: table }
-CConfigStore = lib.class('CConfigStore')
-
----@diagnostic disable-next-line: duplicate-set-field
-function CConfigStore:constructor()
-  self.private.m_vehicles = {}
-  self.private.m_dealerships = {}
-
-  self:setVehicleCategories()
-  self:setDealerships()
-end
-
----@param dealershipIndex number
----@param dealershipConfiguration table
----@return boolean valid
----@return string validationError
 local function validateDealership(dealershipIndex, dealershipConfiguration)
   if type(dealershipConfiguration?.name) ~= 'string' then
     return false, ('Dealership at index #%d is missing the required \'name\' component.'):format(dealershipIndex)
@@ -48,14 +30,28 @@ local function validateDealership(dealershipIndex, dealershipConfiguration)
   return true, ('Validated dealership "%s"'):format(dealershipConfiguration.name)
 end
 
+---@class CDealershipConfig
+---@diagnostic disable-next-line: duplicate-doc-field
+---@field private private { m_vehicles: table, m_dealerships: table }
+CDealershipConfig = lib.class('CDealershipConfig')
+
+---@diagnostic disable-next-line: duplicate-set-field
+function CDealershipConfig:constructor()
+  self.private.m_vehicles = {}
+  self.private.m_dealerships = {}
+
+  self:setVehicleCategories()
+  self:setDealerships()
+end
+
 ---Get dealerships
 ---@return CDealership[]
-function CConfigStore:getDealerships()
+function CDealershipConfig:getDealerships()
   return self.private.m_dealerships
 end
 
 ---Set dealerships
-function CConfigStore:setDealerships()
+function CDealershipConfig:setDealerships()
   local rawDealerships = GetConvar('mimesis:dealership:dealerships', 'default')
 
   if rawDealerships == 'default' then
@@ -82,13 +78,13 @@ function CConfigStore:setDealerships()
 end
 
 ---@return table
-function CConfigStore:getVehicles()
+function CDealershipConfig:getVehicles()
   return self.private.m_vehicles
 end
 
 ---@param category string
 ---@return table
-function CConfigStore:getVehiclesByCategory(category)
+function CDealershipConfig:getVehiclesByCategory(category)
   local vehicles = self:getVehicles()
   local vehiclesFromCategory = vehicles[category]
 
@@ -103,7 +99,7 @@ end
 ---Get a random vehicle model from the passed vehicle category
 ---@param vehicleCategory string
 ---@return number vehicleModel
-function CConfigStore:getRandomVehicleFromCategory(vehicleCategory)
+function CDealershipConfig:getRandomVehicleFromCategory(vehicleCategory)
   local vehiclesByCategory = self.private.m_vehicles
 
   if not vehiclesByCategory[vehicleCategory] then
@@ -123,7 +119,7 @@ function CConfigStore:getRandomVehicleFromCategory(vehicleCategory)
 end
 
 ---Sets the 
-function CConfigStore:setVehicleCategories()
+function CDealershipConfig:setVehicleCategories()
   local rawVehicles = GetConvar('mimesis:dealership:vehicleCategories', 'default')
 
   if rawVehicles == 'default' then

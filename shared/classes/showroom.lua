@@ -14,11 +14,11 @@ local function getVehicleLabel(model)
 end
 
 ---@class CShowroom
----@field private private { m_config: CConfigStore, m_dealershipName:string, m_soldVehicleCategories: table, m_vehicleDisplaySlots: CVehicleDisplaySlot[], m_currentlySelectedDisplaySlot: CVehicleDisplaySlot? }
+---@field private private { m_config: CDealershipConfig, m_dealershipName:string, m_soldVehicleCategories: table, m_vehicleDisplaySlots: CVehicleDisplaySlot[], m_currentlySelectedDisplaySlot: CVehicleDisplaySlot? }
 CShowroom = lib.class('CShowroom')
 
 ---Create a new instance of CShowroom
----@param config CConfigStore
+---@param config CDealershipConfig
 ---@param dealershipName string
 ---@param showroomInfo table
 function CShowroom:constructor(config, dealershipName, showroomInfo)

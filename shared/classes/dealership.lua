@@ -11,11 +11,11 @@ local function SetBlipName(blip, name)
 end
 
 ---@class CDealership
----@field private private { m_config: CConfigStore, m_name: string, m_blip: number, m_point: CPoint, m_showroom: CShowroom, m_vehicleCreationPoints: table }
+---@field private private { m_config: CDealershipConfig, m_name: string, m_blip: number, m_point: CPoint, m_showroom: CShowroom, m_vehicleCreationPoints: table }
 CDealership = lib.class('CDealership')
 
 ---Create a new instance of CDealership
----@param config CConfigStore
+---@param config CDealershipConfig
 ---@param dealershipName string
 ---@param dealershipBlip table
 ---@param dealershipPoint table
