@@ -1,6 +1,8 @@
 local IS_SERVER <const> = IsDuplicityVersion()
 local INVALID_SLOT_INDEX <const> = -1
 local INVALID_VEHICLE_INDEX <const> = 0
+local VEHICLELOCK_CANNOT_ENTER <const> = 10
+local INTERACTION_DISTANCE <const> = 1.5
 
 local function getVehicleLabel(model)
     local make = GetLabelText(GetMakeNameFromVehicleModel(model))
@@ -174,7 +176,7 @@ function CShowroom:addVehicleTargets(vehicleIndex)
     exports.ox_target:addLocalEntity(vehicleIndex, {
         label = 'Switch',
         icon = 'fa-solid fa-key',
-        distance = 1.5,
+        distance = INTERACTION_DISTANCE,
         onSelect = function(data)
             self:setCurrentlySelectedDisplaySlot(data.entity)
             lib.showMenu(('dealership:%s'):format(dealershipName))
@@ -183,7 +185,7 @@ function CShowroom:addVehicleTargets(vehicleIndex)
 
     exports.ox_target:addLocalEntity(vehicleIndex, {
         label = "Purchase",
-        distance = 1.5,
+        distance = INTERACTION_DISTANCE,
         onSelect = function(data)
             local vehicleDisplaySlot = self:setCurrentlySelectedDisplaySlot(data.entity)
 
@@ -215,7 +217,7 @@ function CShowroom:addVehicleTargets(vehicleIndex)
 
     exports.ox_target:addLocalEntity(vehicleIndex, {
         label = "Test drive",
-        distance = 1.5,
+        distance = INTERACTION_DISTANCE,
         onSelect = function(data)
             print('Test drive selected')
         end
@@ -257,10 +259,10 @@ function CShowroom:createShowroomVehicle(displaySlotIndex, vehicleModel, vehicle
 
     SetModelAsNoLongerNeeded(vehicleModel)
 
-    local vehiclelockCannotEnter = 10
+    Entity(vehicleIndex).state:set('dealershipVehicle', true)
 
     SetVehicleOnGroundProperly(vehicleIndex)
-    SetVehicleDoorsLocked(vehicleIndex, vehiclelockCannotEnter)
+    SetVehicleDoorsLocked(vehicleIndex, VEHICLELOCK_CANNOT_ENTER)
     FreezeEntityPosition(vehicleIndex, true)
 
     vehicleDisplaySlot:setVehicleModel(vehicleModel)
