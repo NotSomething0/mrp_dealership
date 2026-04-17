@@ -40,11 +40,34 @@ RegisterNetEvent('mimesis:dealership:requestUpdateShowroomSlot', function(dealer
 end)
 
 RegisterNetEvent('mimesis:dealerships:requestPurchaseVehicle', function(dealershipName, displaySlotIndex, storeVehicle)
-    local player = Ox.GetPlayer(source)
+    local player = Ox.GetPlayer(source --[[@as number]])
 
     if not player then
         return
     end
+
+    --[[
+    local dealership = dealershipManager:getDealershipByName(dealershipName)
+
+    if not dealership then
+        TriggerClientEvent('ox_lib:notify', player.source, {
+            title = 'Denied',
+            description = ('Failed to purchase vehicle %s is not a valid dealership'):format(dealershipName),
+            type = 'error'
+        })
+        return
+    end
+
+    local showroom = dealership:getShowroom()
+    local displaySlot = showroom:getVehicleDisplaySlot(displaySLotIndex)
+
+    if not displaySlot then
+        TriggerClientEvent('ox_lib:notify', player.source, {
+            title = 
+        })
+        return
+    end
+    ]]
 
     local dealerships = config:getDealerships()
 
@@ -75,13 +98,26 @@ RegisterNetEvent('mimesis:dealerships:requestPurchaseVehicle', function(dealersh
 
             local creationPoint = dealership:getAvailableVehicleCreationPoint()
 
+            if not creationPoint then
+                TriggerClientEvent('ox_lib:notify', player.source, {
+                    title = 'No creation point',
+                    description = 'No vehicle creation points are avaliable at this time.',
+                    type = 'error'
+                })
+                return
+            end
+
             Ox.CreateVehicle({
                 model = vehicleModel,
                 owner = player.charId,
                 stored = storeVehicle
             }, creationPoint.coordinates, creationPoint.heading)
 
-            playerAccount.removeBalance(vehicleModelPrice)
+            playerAccount.removeBalance({
+                amount = vehicleModelPrice,
+                message = string.format('Vheicle'),
+                overdraw = false
+            })
 
             TriggerClientEvent('ox_lib:notify', player.source, {
                 title = 'Vehicle successfully purchased',

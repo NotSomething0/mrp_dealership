@@ -1,8 +1,7 @@
 local IS_SERVER <const> = IsDuplicityVersion()
-local INVALID_SLOT_INDEX <const> = -1
 local INVALID_VEHICLE_INDEX <const> = 0
 local VEHICLELOCK_CANNOT_ENTER <const> = 10
-local INTERACTION_DISTANCE <const> = 1.5
+local INTERACTION_DISTANCE <const> = 2.5
 
 local function getVehicleLabel(model)
     local make = GetLabelText(GetMakeNameFromVehicleModel(model))
@@ -155,14 +154,15 @@ function CShowroom:createShowroomVehicles()
     end
 end
 
----Sets the currently selected vehicle
----@param selectedVehicle number
+---Sets the currently selected display slot
+---@param selectedVehicle number Dealership vehicle index
 ---@return CVehicleDisplaySlot? vehicleDisplaySlot
 function CShowroom:setCurrentlySelectedDisplaySlot(selectedVehicle)
     local vehicleDisplaySlot = self:getDisplaySlotFromVehicle(selectedVehicle)
 
     if not vehicleDisplaySlot then
-        return
+        self.private.m_currentlySelectedDisplaySlot = nil
+        return nil
     end
 
     self.private.m_currentlySelectedDisplaySlot = vehicleDisplaySlot
@@ -211,7 +211,7 @@ function CShowroom:addVehicleTargets(vehicleIndex)
                 )
             end
 
-            self:setCurrentlySelectedDisplaySlot(INVALID_SLOT_INDEX)
+            self:setCurrentlySelectedDisplaySlot(INVALID_VEHICLE_INDEX)
         end
     })
 
@@ -270,7 +270,6 @@ function CShowroom:createShowroomVehicle(displaySlotIndex, vehicleModel, vehicle
     vehicleDisplaySlot:setVehicleIndex(vehicleIndex)
 
     self:addVehicleTargets(vehicleIndex)
-    --self:setSlotVehicle(slotIndex, vehicleIndex)
 end
 
 ---@param serializedData table

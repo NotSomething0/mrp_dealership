@@ -52,6 +52,8 @@ end
 ---Get the point associated with the dealership
 ---@return CPoint dealershipPoint
 function CDealership:getPoint()
+  assert(not IS_SERVER, 'CDealership:getPoint is only availble on the client')
+
   return self.private.m_point
 end
 
@@ -241,13 +243,13 @@ local function getVehicleLabel(model)
 end
 
 function CDealership:createSelectionMenu()
-  local allVehicles = self.private.m_config:getVehicles()
   local vehiclesToInclude = {}
+  local vehicleByCategory = self.private.m_config:getVehicles()
   local vehicleCategories = self.private.m_showroom:getSoldVehicleCategories()
 
   for categoryIndex = 1, #vehicleCategories do
     local categoryName = vehicleCategories[categoryIndex]
-    local vehiclesInCategory = allVehicles[categoryName]
+    local vehiclesInCategory = vehicleByCategory[categoryName]
 
     if vehiclesInCategory then
       vehiclesToInclude[categoryName] = {}
@@ -290,6 +292,8 @@ function CDealership:createSelectionMenu()
   end)
 end
 
+---Get an available vehicle creation point  
+---@return { coordinates: vector3, heading: number }?
 function CDealership:getAvailableVehicleCreationPoint()
   local vehicleCreationPoints = self:getVehicleCreationPoints()
   local vehiclePool = GetGamePool('CVehicle')
